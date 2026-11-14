@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 dotenv.config();
 const dir=path.dirname(fileURLToPath(import.meta.url));
 const items=JSON.parse(await fs.readFile(path.join(dir,'data/investigations.json'),'utf8'));
-const app=express();app.use(cors());app.use(express.json({limit:'1mb'}));
+const app=express();app.use(cors());app.use(express.json({limit:'10mb'}));
 app.get('/api/health',(_,res)=>res.json({ok:true,service:'Fire Marshal Orbital API',records:items.length}));
 app.get('/api/investigations',(req,res)=>{
  const q=String(req.query.q||'').toLowerCase(),topic=String(req.query.topic||'');
@@ -16,6 +16,64 @@ app.get('/api/investigations',(req,res)=>{
  res.json({total:found.length,items:found});
 });
 app.get('/api/investigations/:id',(req,res)=>{const x=items.find(i=>i.id===req.params.id);x?res.json(x):res.status(404).json({error:'Not found'});});
+
+const flexDataPath = path.join(dir, 'data', 'flex', 'measurements.json');
+let flexDataset = JSON.parse(await fs.readFile(flexDataPath, 'utf8').catch(() => '{\"metadata\":{},\"records\":[]}'));
+const FLEX_NUMERIC_FIELDS = ['elapsedTimeS', 'dropletDiameterMm', 'oxygenMoleFraction', 'pressureAtm', 'burningRateMm2PerS'];
+
+app.get('/api/flex/data', (_req, res) => {
+  res.json(flexDataset);
+});
+
+app.post('/api/flex/import', async (req, res) => {
+  try {
+    const records = Array.isArray(req.body.records) ? req.body.records : [];
+    const sourceFile = typeof req.body.sourceFile === 'string' ? req.body.sourceFile.slice(0, 180) : 'uploaded.csv';
+    if (!records.length) return res.status(400).json({ error: 'The imported dataset contains no records.' });
+    if (records.length > 50000) return res.status(413).json({ error: 'The dataset exceeds the 50,000-row import limit.' });
+
+    const cleanRecords = records.map((record, index) => {
+      if (!record || typeof record.testId !== 'string' || !record.testId.trim()) {
+        throw new Error(`Row ${index + 1}: testId is required.`);
+      }
+      const clean = {
+        testId: record.testId.trim().slice(0, 100),
+        fuel: typeof record.fuel === 'string' ? record.fuel.trim().slice(0, 100) : '',
+        suppressant: typeof record.suppressant === 'string' ? record.suppressant.trim().slice(0, 100) : '',
+        extinctionOutcome: typeof record.extinctionOutcome === 'string' ? record.extinctionOutcome.trim().slice(0, 100) : '',
+        sourceReference: typeof record.sourceReference === 'string' ? record.sourceReference.trim().slice(0, 500) : ''
+      };
+      for (const field of FLEX_NUMERIC_FIELDS) {
+        const value = record[field];
+        clean[field] = value === null || value === '' || value === undefined ? null : Number(value);
+        if (clean[field] !== null && !Number.isFinite(clean[field])) {
+          throw new Error(`Row ${index + 1}: ${field} must be a finite number or blank.`);
+        }
+      }
+      if (clean.oxygenMoleFraction !== null && (clean.oxygenMoleFraction < 0 || clean.oxygenMoleFraction > 1)) {
+        throw new Error(`Row ${index + 1}: oxygenMoleFraction must be between 0 and 1.`);
+      }
+      return clean;
+    });
+
+    const nextDataset = {
+      metadata: {
+        investigationId: 'flex', sourceFile, sourceUrl: 'https://psi.nasa.gov/physci/repo/data/investigations/PSI-69',
+        importedAt: new Date().toISOString(), recordCount: cleanRecords.length,
+        status: 'imported_user_supplied_csv', schemaVersion: 1
+      },
+      records: cleanRecords
+    };
+    await fs.mkdir(path.dirname(flexDataPath), { recursive: true });
+    const tempPath = `${flexDataPath}.tmp`;
+    await fs.writeFile(tempPath, JSON.stringify(nextDataset, null, 2));
+    await fs.rename(tempPath, flexDataPath);
+    flexDataset = nextDataset;
+    res.json({ ok: true, imported: cleanRecords.length, metadata: flexDataset.metadata });
+  } catch (error) {
+    res.status(400).json({ error: error.message || 'Could not import FLEX data.' });
+  }
+});
 app.post('/api/compare',(req,res)=>{const ids=Array.isArray(req.body.ids)?req.body.ids.slice(0,2):[];res.json({items:ids.map(id=>items.find(x=>x.id===id)).filter(Boolean),note:'Compare descriptions only. Quantitative equivalence requires original datasets and methods.'});});
 
 const SCIENTIFIC_TERMS = {

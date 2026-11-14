@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 
 import {
   Archive,
+  BarChart3,
   Bot,
   ChevronRight,
   Flame,
@@ -15,6 +16,7 @@ import {
 } from 'lucide-react';
 
 import Simulator from './Simulator';
+import FlexDataExplorer from './FlexDataExplorer';
 import './style.css';
 
 // ==========================================
@@ -26,6 +28,7 @@ const API = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 const tabs = [
   'Overview',
   'Research Archive',
+  'Charts',
   'AI Assistant',
   'Simulator',
   'Mission Briefing'
@@ -903,6 +906,29 @@ function App() {
         )}
 
         {/* ==================================
+            FLEX CHARTS / RAW DATA VISUALIZER
+        ================================== */}
+
+        {tab === 'Charts' && (
+          <div className="layout">
+            <section className="panel flex-charts-page">
+              <div className="section-head">
+                <div>
+                  <small>DATA ANALYSIS / FLEX EXPERIMENT</small>
+                  <h2><BarChart3 /> FLEX Charts & Raw Visualizer</h2>
+                  <p>
+                    Explore FLEX combustion plots and inspect the imported
+                    experimental observations directly.
+                  </p>
+                </div>
+                <label className="tag">FLEX DATA WORKSPACE</label>
+              </div>
+              <FlexDataExplorer showPreviewByDefault />
+            </section>
+          </div>
+        )}
+
+        {/* ==================================
             OVERVIEW
         ================================== */}
 
@@ -1343,7 +1369,7 @@ function App() {
 
               <div>
                 <small>MEASUREMENTS</small>
-                <b>Not imported</b>
+                <b>{selected.id === 'flex' ? 'Explorer available' : 'Not imported'}</b>
               </div>
             </div>
 
@@ -1403,6 +1429,8 @@ function App() {
                 {selected.dataAvailabilityNote || 'Consult the individual NASA PSI record for available research files.'}
               </p>
             </div>
+
+            {selected.id === 'flex' && <FlexDataExplorer />}
 
             <div className="chips">
               {(selected.topics || []).map(itemTopic => (
