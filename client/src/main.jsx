@@ -198,12 +198,15 @@ function App() {
   const [researchError, setResearchError] = useState('');
 
   // AI Assistant
-  const [question, setQuestion] = useState(
-    'What did SAFFIRE investigate?'
-  );
-  const [answer, setAnswer] = useState(null);
+  const [question, setQuestion] = useState('');
+  const [messages, setMessages] = useState([
+  {
+  role: 'assistant',
+  content: 'Hello! I am FIRE MARSHAL AI. I can help you explore NASA combustion research, understand microgravity phenomena and analyze scientific evidence.',
+  sources: []
+  }
+  ]);
   const [busy, setBusy] = useState(false);
-
   // ========================================
   // LOAD RESEARCH DATA
   // ========================================
@@ -341,8 +344,21 @@ function App() {
   async function ask(event) {
     event.preventDefault();
 
+    const text = question.trim();
+
+    if (!text || busy) return;
+
+    const updatedMessages = [
+      ...messages,
+      {
+        role: 'user',
+        content: text
+      }
+    ];
+
+    setMessages(updatedMessages);
+    setQuestion('');
     setBusy(true);
-    setAnswer(null);
 
     try {
       const response = await fetch(`${API}/api/assistant/query`, {
@@ -350,19 +366,43 @@ function App() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ question })
+        body: JSON.stringify({
+          messages: updatedMessages
+            .filter(m => m.role === 'user' || m.role === 'assistant')
+            .map(m => ({
+              role: m.role,
+              content: m.content
+            }))
+        })
       });
+
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error('The AI Assistant request failed.');
+        throw new Error(data.error || 'Assistant request failed.');
       }
 
-      setAnswer(await response.json());
-    } catch {
-      setAnswer({
-        answer: 'API unavailable. Check that the Node server is running.',
-        sources: []
-      });
+      setMessages(current => [
+        ...current,
+        {
+          role: 'assistant',
+          content: data.answer,
+          sources: data.sources || [],
+          mode: data.mode,
+          caveat: data.caveat
+        }
+      ]);
+
+    } catch (error) {
+      setMessages(current => [
+        ...current,
+        {
+          role: 'assistant',
+          content: error.message || 'Unable to connect to Groq AI.',
+          sources: [],
+          mode: 'error'
+        }
+      ]);
     } finally {
       setBusy(false);
     }
@@ -927,66 +967,128 @@ function App() {
             AI ASSISTANT
         ================================== */}
 
+                
         {tab === 'AI Assistant' && (
           <div className="layout">
 
             <section className="panel assistant">
-              <small>RESEARCH INTELLIGENCE / 02</small>
 
-              <h2>
-                <Bot /> AI Research Assistant
-              </h2>
+              <div className="assistant-header">
+                <div>
+                  <small>RESEARCH INTELLIGENCE / 02</small>
+                  <h2>
+                    <Bot /> FIRE MARSHAL AI
+                  </h2>
+                  <p>
+                    Your intelligent NASA combustion research assistant.
+                  </p>
+                </div>
 
-              <p>
-                Ask about the curated investigation index.
-                Answers show the sources used.
-              </p>
+                <span className="tag">GROQ AI ONLINE</span>
+              </div>
 
-              <form onSubmit={ask}>
+              <div className="chat-messages">
+
+                {messages.map((message, index) => (
+                  <div
+                    key={index}
+                    className={`chat-message ${message.role}`}
+                  >
+                    <div className="chat-avatar">
+                      {message.role === 'assistant'
+                        ? <Bot />
+                        : 'YOU'}
+                    </div>
+
+                    <div className="chat-content">
+
+                      <small>
+                        {message.role === 'assistant'
+                          ? 'FIRE MARSHAL AI'
+                          : 'YOU'}
+                      </small>
+
+                      <div className="chat-bubble">
+                        {message.content}
+                      </div>
+
+                      {message.sources?.length > 0 && (
+                        <div className="chat-sources">
+                          <b>REFERENCES</b>
+
+                          {message.sources.map(source => (
+                            <a
+                              key={source.id}
+                              href={source.url}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              {source.acronym} · {source.title} ↗
+                            </a>
+                          ))}
+                        </div>
+                      )}
+
+                      {message.caveat && (
+                        <div className="caveat">
+                          {message.caveat}
+                        </div>
+                      )}
+
+                    </div>
+                  </div>
+                ))}
+
+                {busy && (
+                  <div className="chat-message assistant">
+                    <div className="chat-avatar">
+                      <Bot />
+                    </div>
+
+                    <div className="chat-content">
+                      <small>FIRE MARSHAL AI</small>
+                      <div className="chat-bubble typing">
+                        Analysing NASA research...
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+
+              <form className="chat-form" onSubmit={ask}>
+
                 <textarea
                   value={question}
                   onChange={event => setQuestion(event.target.value)}
-                  placeholder="Ask a research question..."
+                  placeholder="Ask FIRE MARSHAL AI anything..."
+                  rows={2}
+                  disabled={busy}
                 />
 
                 <button
                   className="primary"
+                  type="submit"
                   disabled={busy || !question.trim()}
                 >
-                  {busy
-                    ? 'Analysing…'
-                    : 'Analyse question →'}
+                  {busy ? 'Thinking...' : 'Send message →'}
                 </button>
+
               </form>
 
-              {answer && (
-                <div className="answer">
-                  <small>
-                    RESEARCH RESPONSE · {answer.mode || 'OFFLINE'}
-                  </small>
+              <button
+                type="button"
+                onClick={() => {
+                  setMessages([{
+                    role: 'assistant',
+                    content: 'Hello! I am FIRE MARSHAL AI. How can I help with your NASA research today?',
+                    sources: []
+                  }]);
+                }}
+              >
+                Clear conversation
+              </button>
 
-                  <p>{answer.answer}</p>
-
-                  {answer.caveat && (
-                    <div className="caveat">
-                      {answer.caveat}
-                    </div>
-                  )}
-
-                  <b>REFERENCES</b>
-
-                  {answer.sources?.map(source => (
-                    <a
-                      key={source.id}
-                      href={source.url}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {source.acronym} · {source.title} ↗
-                    </a>
-                  ))}
-                </div>
-              )}
             </section>
 
             <section className="panel">
@@ -996,12 +1098,14 @@ function App() {
                 'What did SAFFIRE investigate?',
                 'What is the purpose of FLEX?',
                 'Which investigations study smoke?',
-                'Why is microgravity combustion different?'
+                'Why is microgravity combustion different?',
+                'Compare SAFFIRE and BASS.'
               ].map(item => (
                 <button
                   className="suggest"
-                  onClick={() => setQuestion(item)}
                   key={item}
+                  disabled={busy}
+                  onClick={() => setQuestion(item)}
                 >
                   {item} →
                 </button>
