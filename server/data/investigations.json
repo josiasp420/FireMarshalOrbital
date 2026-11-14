@@ -1,0 +1,159 @@
+[
+  {
+    "id": "saffire-i",
+    "acronym": "SAFFIRE-I",
+    "title": "Spacecraft Fire Safety Experiment-I",
+    "status": "Complete",
+    "topics": [
+      "Spacecraft fire safety",
+      "Solid fuels",
+      "Smoke"
+    ],
+    "summary": "Investigated large-scale fire growth in low gravity and low-gravity flammability limits relative to normal-gravity screening tests.",
+    "detail": "NASA PSI describes objectives to determine how rapidly a large-scale fire grows in low gravity and to investigate low-gravity flammability limits compared with NASA's normal-gravity material flammability screening test.",
+    "sourceUrl": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-98"
+  },
+  {
+    "id": "saffire-ii",
+    "acronym": "SAFFIRE-II",
+    "title": "Spacecraft Fire Safety Experiment-II",
+    "status": "Complete",
+    "topics": [
+      "Spacecraft fire safety",
+      "Smoke"
+    ],
+    "summary": "Part of NASA's Spacecraft Fire Safety investigation series, studying fire-related behavior in a spacecraft-relevant low-gravity environment.",
+    "detail": "NASA lists SAFFIRE-II as a completed spacecraft fire safety investigation. Consult its PSI record and associated files for exact objectives, methods, and measured results.",
+    "sourceUrl": "https://www.nasa.gov/physical-sciences-informatics-psi/psi-investigations-by-research-area/"
+  },
+  {
+    "id": "saffire-iii",
+    "acronym": "SAFFIRE-III",
+    "title": "Spacecraft Fire Safety Experiment-III",
+    "status": "Complete",
+    "topics": [
+      "Spacecraft fire safety",
+      "Smoke"
+    ],
+    "summary": "A third investigation in NASA's SAFFIRE series, contributing to research on spacecraft fire safety.",
+    "detail": "NASA lists SAFFIRE-III among completed Combustion Science investigations. Exact conditions and findings must be taken from its individual PSI record and source files.",
+    "sourceUrl": "https://www.nasa.gov/physical-sciences-informatics-psi/psi-investigations-by-research-area/"
+  },
+  {
+    "id": "bass",
+    "acronym": "BASS",
+    "title": "Burning and Suppression of Solids",
+    "status": "Complete",
+    "topics": [
+      "Solid fuels",
+      "Suppression"
+    ],
+    "summary": "Examines burning and extinction characteristics of a variety of solid fuel samples in microgravity.",
+    "detail": "NASA Glenn states that BASS examines burning and extinction characteristics of a wide variety of fuel samples in microgravity.",
+    "sourceUrl": "https://www.nasa.gov/glenn/glenn-expertise-space-exploration/physical-sciences-program/combustion-science/"
+  },
+  {
+    "id": "bass-ii",
+    "acronym": "BASS-II",
+    "title": "Burning and Suppression of Solids-II",
+    "status": "Complete",
+    "topics": [
+      "Solid fuels",
+      "Suppression"
+    ],
+    "summary": "Follow-on investigation in NASA's Burning and Suppression of Solids research area.",
+    "detail": "NASA's PSI catalogue lists BASS-II as a completed Combustion Science investigation. Review its individual record for precise samples, conditions, and results.",
+    "sourceUrl": "https://www.nasa.gov/physical-sciences-informatics-psi/psi-investigations-by-research-area/"
+  },
+  {
+    "id": "flex",
+    "acronym": "FLEX",
+    "title": "Flame Extinguishment Experiment",
+    "status": "Complete",
+    "topics": [
+      "Droplets",
+      "Suppression"
+    ],
+    "summary": "Designed to assess inert-gas suppressant effectiveness in microgravity and estimate limiting oxygen index for steady combustion.",
+    "detail": "NASA describes FLEX as designed to assess the effectiveness of inert-gas suppressants in microgravity and obtain a conservative estimate of the limiting oxygen index for steady combustion.",
+    "sourceUrl": "https://www.nasa.gov/glenn/glenn-expertise-space-exploration/physical-sciences-program/combustion-science/"
+  },
+  {
+    "id": "flex-2",
+    "acronym": "FLEX-2",
+    "title": "Flame Extinguishment Experiment-2",
+    "status": "Complete",
+    "topics": [
+      "Droplets",
+      "Suppression"
+    ],
+    "summary": "Follow-on flame-extinguishment investigation listed in NASA's completed Combustion Science research.",
+    "detail": "NASA PSI lists FLEX-2 as a completed Combustion Science investigation. Consult its individual record for precise scope and results.",
+    "sourceUrl": "https://www.nasa.gov/physical-sciences-informatics-psi/psi-investigations-by-research-area/"
+  },
+  {
+    "id": "acme-sflames",
+    "acronym": "ACME S-Flames",
+    "title": "Structure and Response of Spherical Diffusion Flames",
+    "status": "Complete",
+    "topics": [
+      "Gaseous flames",
+      "Flame structure"
+    ],
+    "summary": "Studies the structure and response of spherical diffusion flames under microgravity conditions.",
+    "detail": "NASA PSI lists ACME S-Flames as a completed investigation. Its title identifies a focus on spherical diffusion flame structure and response; quantitative claims require the individual dataset and publications.",
+    "sourceUrl": "https://www.nasa.gov/physical-sciences-informatics-psi/psi-investigations-by-research-area/"
+  },
+  {
+    "id": "same",
+    "acronym": "SAME",
+    "title": "Smoke Aerosol Measurement Experiment",
+    "status": "Complete",
+    "topics": [
+      "Smoke",
+      "Detection"
+    ],
+    "summary": "Research related to smoke aerosols and spacecraft smoke detection.",
+    "detail": "NASA explains that spacecraft smoke detectors must detect different types of smoke, including soot from hydrocarbon fuels and droplets of recondensed polymer fragments from plastics. SAME supports research in this area.",
+    "sourceUrl": "https://www.nasa.gov/glenn/glenn-expertise-space-exploration/physical-sciences-program/combustion-science/"
+  },
+  {
+    "id": "same-r",
+    "acronym": "SAME-R",
+    "title": "Smoke Aerosol Measurement Experiment Reflight",
+    "status": "Complete",
+    "topics": [
+      "Smoke",
+      "Detection"
+    ],
+    "summary": "Reflight associated with the Smoke Aerosol Measurement Experiment research.",
+    "detail": "NASA PSI lists SAME-R as a completed Combustion Science investigation. Use its individual record and files for exact purpose, conditions, and findings.",
+    "sourceUrl": "https://www.nasa.gov/physical-sciences-informatics-psi/psi-investigations-by-research-area/"
+  },
+  {
+    "id": "slice",
+    "acronym": "SLICE",
+    "title": "Structure and Liftoff in Combustion Experiment",
+    "status": "Complete",
+    "topics": [
+      "Gaseous flames",
+      "Flame structure"
+    ],
+    "summary": "Investigates coflow laminar diffusion flames, a configuration useful for comparison with accurate numerical models.",
+    "detail": "NASA notes the value of coflow laminar diffusion flames for combustion studies because accurate numerical modeling is available for this configuration.",
+    "sourceUrl": "https://www.nasa.gov/glenn/glenn-expertise-space-exploration/physical-sciences-program/combustion-science/"
+  },
+  {
+    "id": "spice",
+    "acronym": "SPICE",
+    "title": "Smoke Point in Co-flow Experiment",
+    "status": "Complete",
+    "topics": [
+      "Gaseous flames",
+      "Smoke"
+    ],
+    "summary": "Studies phenomena related to stability and extinction of jet diffusion flames and smoke point behavior.",
+    "detail": "NASA describes SPICE as continuing fundamental work related to mechanisms controlling the stability and extinction of jet diffusion flames.",
+    "sourceUrl": "https://www.nasa.gov/glenn/glenn-expertise-space-exploration/physical-sciences-program/combustion-science/"
+  }
+]
