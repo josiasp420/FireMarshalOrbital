@@ -64,10 +64,12 @@ app.post('/api/flex/import', async (req, res) => {
       },
       records: cleanRecords
     };
-    await fs.mkdir(path.dirname(flexDataPath), { recursive: true });
-    const tempPath = `${flexDataPath}.tmp`;
-    await fs.writeFile(tempPath, JSON.stringify(nextDataset, null, 2));
-    await fs.rename(tempPath, flexDataPath);
+    if (!process.env.VERCEL) {
+      await fs.mkdir(path.dirname(flexDataPath), { recursive: true });
+      const tempPath = `${flexDataPath}.tmp`;
+      await fs.writeFile(tempPath, JSON.stringify(nextDataset, null, 2));
+      await fs.rename(tempPath, flexDataPath);
+    }
     flexDataset = nextDataset;
     res.json({ ok: true, imported: cleanRecords.length, metadata: flexDataset.metadata });
   } catch (error) {
@@ -348,4 +350,6 @@ app.post('/api/assistant/query', async (req, res) => {
 });
 
 app.get('/api/scenarios',(_,res)=>res.json([{id:'smoke-detection-01',title:'Unusual aerosol readings',choices:['Assume a fire and choose suppression immediately','Review sensor context and smoke-characterisation evidence','Ignore alert until a visible flame appears'],correctChoice:1,evidence:['SAME','SAME-R'],disclaimer:'Educational only. Not an emergency procedure.'}]));
-const port=Number(process.env.PORT||4000);app.listen(port,()=>console.log(`API listening at http://localhost:${port}`));
+const port=Number(process.env.PORT||4000);
+if(!process.env.VERCEL){app.listen(port,()=>console.log(`API listening at http://localhost:${port}`));}
+export default app;
